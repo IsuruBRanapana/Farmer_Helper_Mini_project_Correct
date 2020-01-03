@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Farmer Helper</string>
+    <string name="facebook_app_id">830385517402713</string>
+    <string name="fb_login_protocol_scheme">fb830385517402713</string>
+</resources>
