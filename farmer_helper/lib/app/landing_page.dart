@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:farmer_helper/app/home_page.dart';
+import 'package:farmer_helper/app/home/home_page.dart';
 import 'package:farmer_helper/app/sign_in/sign_in.dart';
 import 'package:farmer_helper/services/auth.dart';
 
