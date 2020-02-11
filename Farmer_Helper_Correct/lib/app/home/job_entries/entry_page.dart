@@ -14,16 +14,25 @@ import 'package:udemy_course/common_widgets/platform_exception_alert_dialog.dart
 import 'package:udemy_course/services/database.dart';
 
 class EntryPage extends StatefulWidget {
-  const EntryPage({@required this.database, @required this.cultivationType, this.cultivationProblem});
+  const EntryPage(
+      {@required this.database,
+      @required this.cultivationType,
+      this.cultivationProblem});
   final CultivationType cultivationType;
   final CultivationProblem cultivationProblem;
   final Database database;
 
-  static Future<void> show({BuildContext context, Database database, CultivationType cultivationType, CultivationProblem cultivationProblem}) async {
-    await Navigator.of(context,rootNavigator: true).push(
+  static Future<void> show(
+      {BuildContext context,
+      Database database,
+      CultivationType cultivationType,
+      CultivationProblem cultivationProblem}) async {
+    await Navigator.of(context, rootNavigator: true).push(
       MaterialPageRoute(
-        builder: (context) =>
-            EntryPage(database: database, cultivationType: cultivationType, cultivationProblem: cultivationProblem),
+        builder: (context) => EntryPage(
+            database: database,
+            cultivationType: cultivationType,
+            cultivationProblem: cultivationProblem),
         fullscreenDialog: true,
       ),
     );
@@ -53,29 +62,29 @@ class _EntryPageState extends State<EntryPage> {
     });
   }*/
   Future chooseFile() async {
-    var selectedImage = await ImagePicker.pickImage(source: ImageSource.gallery);
-      setState((){
-        _image= selectedImage;
-        uploadPic(context);
-      });
+    var selectedImage =
+        await ImagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _image = selectedImage;
+      uploadPic(context);
+    });
   }
-
 
   Future uploadPic(BuildContext context) async {
     /* String fileName = basename(_image.path);*/
     StorageReference firebaseStorageRef =
-    FirebaseStorage.instance.ref().child('fileName');
-    var timeKey=DateTime.now();
+        FirebaseStorage.instance.ref().child('fileName');
+    var timeKey = DateTime.now();
 
-    final StorageUploadTask uploadTask = firebaseStorageRef.child(timeKey.toString()+".jpg").putFile(_image);
-
+    final StorageUploadTask uploadTask =
+        firebaseStorageRef.child(timeKey.toString() + ".jpg").putFile(_image);
 
     var imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
     print(imageUrl.toString());
     _url = imageUrl.toString();
     print('$_url');
     print("Image Url=" + _url);
-    correctImageUrl=await saveToDatabase(_url);
+    correctImageUrl = await saveToDatabase(_url);
     print(correctImageUrl);
 
     /*setState(() async {
@@ -84,18 +93,16 @@ class _EntryPageState extends State<EntryPage> {
       }
     });*/
 
-
-
-
     /*StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;*/
-    setState(() {
+    /* setState(() {
       print('Profile picture is uploaded.');
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text('Profile picture is uploaded.'),
       ));
-    });
+    });*/
   }
-  Future<String> saveToDatabase(url) async{
+
+  Future<String> saveToDatabase(url) async {
     return url.toString();
     /*DocumentReference ds=Firestore.instance.collection('profiledata').document(email);
     Map<String,dynamic> tasks={
@@ -139,7 +146,7 @@ class _EntryPageState extends State<EntryPage> {
     _endTime = TimeOfDay.fromDateTime(end);
 
     _description = widget.cultivationProblem?.comment ?? '';
-    url=correctImageUrl;
+    url = correctImageUrl;
     print(url);
   }
 
@@ -148,13 +155,14 @@ class _EntryPageState extends State<EntryPage> {
         _startTime.hour, _startTime.minute);
     final end = DateTime(_endDate.year, _endDate.month, _endDate.day,
         _endTime.hour, _endTime.minute);
-    final id = widget.cultivationProblem?.id ?? documentIdFromCurrentDateAndTime();
-    final imageCorrectUrl=url;
+    final id =
+        widget.cultivationProblem?.id ?? documentIdFromCurrentDateAndTime();
+    final imageCorrectUrl = url;
 
     return CultivationProblem(
       id: id,
       jobId: widget.cultivationType.id,
-    start: start,
+      start: start,
       end: end,
       comment: _description,
       image: correctImageUrl,
@@ -183,7 +191,7 @@ class _EntryPageState extends State<EntryPage> {
         actions: <Widget>[
           FlatButton(
             child: Text(
-              widget.cultivationProblem != null ? 'Update' : 'Create',
+              widget.cultivationProblem != null ? 'Update' : 'Post',
               style: TextStyle(fontSize: 18.0, color: Colors.white),
             ),
             onPressed: () => _setEntryAndDismiss(context),
@@ -197,8 +205,8 @@ class _EntryPageState extends State<EntryPage> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              _buildStartDate(),
-              _buildEndDate(),
+            //  _buildStartDate(),
+              //_buildEndDate(),
               _buildImageUrl(),
               SizedBox(height: 8.0),
               _buildDuration(),
@@ -265,44 +273,59 @@ class _EntryPageState extends State<EntryPage> {
   Widget _buildImageUrl() {
     return Row(
       children: <Widget>[
-        Align(
-          alignment: Alignment.center,
-          child: CircleAvatar(
-            backgroundColor: Color(0xffBA680B),
-            radius: 100,
-            child: ClipOval(
-              child: SizedBox(
-                width: 180.0,
-                height: 180.0,
-                child: (_image != null)
-                    ? Image.file(
-                  _image,
-                  fit: BoxFit.fill,
-                )
-                    : Image.network(
-                  '',
-                  fit: BoxFit.fill,
+        Expanded(
+          child: SizedBox(),
+          flex: 1,
+        ),
+        Expanded(
+          flex: 5,
+          child: Center(
+            child: Align(
+              alignment: Alignment.center,
+              child: Center(
+                child: Container(
+                  color: Color(0xffBA680B),
+                  child: Stack(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 250,
+                        width: 250,
+                        child: (_image != null)
+                            ? Image.file(
+                                _image,
+                                fit: BoxFit.fill,
+                              )
+                            : Image.network(
+                                '',
+                                fit: BoxFit.fill,
+                              ),
+                      ),
+                      Center(
+                        child: Center(
+                          child: Center(
+                            child: IconButton(
+                              icon: Icon(Icons.add_a_photo),
+                              onPressed: () {
+                                //uploadPic(context);
+                                chooseFile();
+                              },
+                              iconSize: 30.0,
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
         ),
-
-        //icon of camera
-        Padding(
-          padding: EdgeInsets.only(top: 60.0),
-          child: IconButton(
-            icon: Icon(Icons.camera_alt),
-            onPressed: () {
-              //uploadPic(context);
-              chooseFile();
-
-            },
-            iconSize: 30.0,
-          ),
+        Expanded(
+          child: SizedBox(),
+          flex: 1,
         )
       ],
     );
   }
-
 }
